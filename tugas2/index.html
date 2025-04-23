@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Pegawai</title>
+    
+    <style>
+        table {
+            border-collapse: collapse; 
+            width: 80%;               
+            margin: 20px auto;        
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ddd;  
+            padding: 8px;            
+            text-align: left;         
+        }
+        th {
+            background-color: #f2f2f2; 
+            font-weight: bold;        
+        }
+        tfoot {
+            font-weight: bold;         
+            background-color: #f9f9f9; 
+        }
+        h1 {
+            text-align: center;       
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Pegawai</h1>
+   
+    <table id="tabelPegawai">
+        <thead>
+            <tr>
+                <th>Nama Pegawai</th>
+                <th>Umur</th>
+                <th>Jabatan</th>
+                <th>Status</th>
+                <th>Gaji Pokok</th>
+                <th>Tunjangan Jabatan</th>
+                <th>BPJS</th>
+                <th>Tunjangan Keluarga</th>
+                <th>Total Gaji</th>
+            </tr>
+        </thead>
+
+        <tbody id="isiTabel">
+        </tbody>
+
+        <tfoot id="footerTabel">
+        </tfoot>
+    </table>
+
+    <script>
+        // ---------- DATA PEGAWAI ----------
+        const namaPegawai = "Dodi Prayodi";
+        const umurPegawai = 25;
+        const jabatanPegawai = "Manajer";
+        const statusPegawai = "Menikah";
+        
+        // ---------- PERHITUNGAN GAJI ----------
+        let gajiPokok = 0;
+        
+        if (jabatanPegawai === "Manajer") {
+            gajiPokok = 15000000; // 15 juta
+        } else if (jabatanPegawai === "Asisten Manajer") {
+            gajiPokok = 10000000; // 10 juta
+        } else if (jabatanPegawai === "Staff") {
+            gajiPokok = 5000000;  // 5 juta
+        }
+        
+        const tunjanganJabatan = gajiPokok * 15 / 100;
+        
+        const bpjs = gajiPokok * 10 / 100;
+        
+        let tunjanganKeluarga;
+        if (statusPegawai === "Menikah") {
+            tunjanganKeluarga = gajiPokok * 20 / 100;
+        } else {
+            tunjanganKeluarga = 0;
+        }
+        
+        const totalGaji = gajiPokok + tunjanganJabatan + tunjanganKeluarga - bpjs;
+        
+        //Ubah angka menjadi format rupiah
+        function formatRupiah(angka) {
+            return "Rp " + angka.toLocaleString("id-ID");
+        }
+        
+        // ---------- MENAMBAHKAN DATA KE TABEL ----------
+        const tbody = document.getElementById("isiTabel");
+        
+        const barisData = document.createElement("tr");
+        
+        // Sel nama
+        const selNama = document.createElement("td");
+        selNama.textContent = namaPegawai;
+        barisData.appendChild(selNama);
+        
+        // Sel umur
+        const selUmur = document.createElement("td");
+        selUmur.textContent = umurPegawai + " tahun";
+        barisData.appendChild(selUmur);
+        
+        // Sel jabatan
+        const selJabatan = document.createElement("td");
+        selJabatan.textContent = jabatanPegawai;
+        barisData.appendChild(selJabatan);
+        
+        // Sel status
+        const selStatus = document.createElement("td");
+        selStatus.textContent = statusPegawai;
+        barisData.appendChild(selStatus);
+        
+        // Sel gaji pokok
+        const selGajiPokok = document.createElement("td");
+        selGajiPokok.textContent = formatRupiah(gajiPokok);
+        barisData.appendChild(selGajiPokok);
+        
+        // Sel tunjangan jabatan
+        const selTunjanganJabatan = document.createElement("td");
+        selTunjanganJabatan.textContent = formatRupiah(tunjanganJabatan);
+        barisData.appendChild(selTunjanganJabatan);
+        
+        // Sel BPJS
+        const selBPJS = document.createElement("td");
+        selBPJS.textContent = formatRupiah(bpjs);
+        barisData.appendChild(selBPJS);
+        
+        // Sel tunjangan keluarga
+        const selTunjanganKeluarga = document.createElement("td");
+        selTunjanganKeluarga.textContent = formatRupiah(tunjanganKeluarga);
+        barisData.appendChild(selTunjanganKeluarga);
+        
+        // Sel total gaji
+        const selTotalGaji = document.createElement("td");
+        selTotalGaji.textContent = formatRupiah(totalGaji);
+        barisData.appendChild(selTotalGaji);
+        
+        tbody.appendChild(barisData);
+        
+        // ---------- MEMBUAT FOOTER TABEL ----------
+        const tfoot = document.getElementById("footerTabel");
+        
+        const barisFooter = document.createElement("tr");
+        
+        const selLabelTotal = document.createElement("td");
+        selLabelTotal.textContent = "Total Gaji";
+        selLabelTotal.colSpan = 8;
+        barisFooter.appendChild(selLabelTotal);
+        
+        const selNilaiTotal = document.createElement("td");
+        selNilaiTotal.textContent = formatRupiah(totalGaji);
+        barisFooter.appendChild(selNilaiTotal);
+        
+        tfoot.appendChild(barisFooter);
+    </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Toko Online</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .delete-btn {
+            background-color: #f44336;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        .product-list {
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .delete-cell {
+            text-align: center;
+        }
+        .action-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistem Manajemen Toko Online</h1>
+        
+        <div class="input-section">
+            <h2>Tambah Produk Baru</h2>
+            <div class="form-group">
+                <label for="nama">Nama Produk:</label>
+                <input type="text" id="nama" placeholder="Masukkan nama produk">
+            </div>
+            <div class="form-group">
+                <label for="harga">Harga (Rp):</label>
+                <input type="number" id="harga" placeholder="Masukkan harga produk">
+            </div>
+            <div class="form-group">
+                <label for="stok">Stok:</label>
+                <input type="number" id="stok" placeholder="Masukkan jumlah stok">
+            </div>
+            <button id="tambah-btn">Tambah Produk</button>
+        </div>
+
+        <div class="product-list">
+            <h2>Daftar Produk</h2>
+            <table id="tabel-produk">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Harga (Rp)</th>
+                        <th>Stok</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="produk-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        //array untuk generate isi tabel
+        let produkToko = [
+            {id: 1, nama: "Laptop", harga: 7000000, stok: 5},
+            {id: 2, nama: "Mouse", harga: 200000, stok: 10},
+            {id: 3, nama: "Keyboard", harga: 350000, stok: 7}
+        ];
+
+        function tambahProduk(nama, harga, stok) {
+            let maxId = 0;
+            for (let i = 0; i < produkToko.length; i++) {
+                if (produkToko[i].id > maxId) {
+                    maxId = produkToko[i].id;
+                }
+            }
+            
+            const newId = maxId + 1;
+            
+            const produkBaru = {
+                id: newId,
+                nama: nama,
+                harga: parseInt(harga),
+                stok: parseInt(stok)
+            };
+            
+            produkToko.push(produkBaru);
+            alert(`Produk "${nama}" berhasil ditambahkan dengan ID: ${newId}`);
+            return produkBaru;
+        }
+
+        function hapusProduk(id) {
+            let indexProduk = -1;
+            for (let i = 0; i < produkToko.length; i++) {
+                if (produkToko[i].id === id) {
+                    indexProduk = i;
+                    break;
+                }
+            }
+            
+            if (indexProduk !== -1) {
+                const namaProduk = produkToko[indexProduk].nama;
+                produkToko.splice(indexProduk, 1);
+                alert(`Produk "${namaProduk}" dengan ID: ${id} berhasil dihapus`);
+                return true;
+            } else {
+                alert(`Produk dengan ID: ${id} tidak ditemukan`);
+                return false;
+            }
+        }
+
+        function tampilkanProduk() {
+            const tableBody = document.getElementById('produk-body');
+            tableBody.innerHTML = '';
+            
+            if (produkToko.length === 0) {
+                const row = tableBody.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 5;
+                cell.textContent = "Tidak ada produk tersedia";
+            } else {
+                for (let i = 0; i < produkToko.length; i++) {
+                    const produk = produkToko[i];
+                    const row = tableBody.insertRow();
+                    
+                    const idCell = row.insertCell(0);
+                    idCell.textContent = produk.id;
+                    
+                    const namaCell = row.insertCell(1);
+                    namaCell.textContent = produk.nama;
+                    
+                    const hargaCell = row.insertCell(2);
+                    hargaCell.textContent = produk.harga.toLocaleString('id-ID');
+                    
+                    const stokCell = row.insertCell(3);
+                    stokCell.textContent = produk.stok;
+                    
+                    const aksiCell = row.insertCell(4);
+                    aksiCell.className = 'delete-cell';
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Hapus';
+                    deleteButton.className = 'delete-btn action-btn';
+                    deleteButton.onclick = function() {
+                        hapusProduk(produk.id);
+                        tampilkanProduk(); 
+                    };
+                    aksiCell.appendChild(deleteButton);
+                }
+            }
+        }
+
+        document.getElementById('tambah-btn').addEventListener('click', function() {
+            const nama = document.getElementById('nama').value;
+            const harga = document.getElementById('harga').value;
+            const stok = document.getElementById('stok').value;
+            
+            if (!nama || !harga || !stok) {
+                alert('Semua field harus diisi!');
+                return;
+            }
+            
+            tambahProduk(nama, harga, stok);
+            
+            document.getElementById('nama').value = '';
+            document.getElementById('harga').value = '';
+            document.getElementById('stok').value = '';
+            
+            tampilkanProduk();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            tampilkanProduk();
+        });
+    </script>
+</body>
+</html>
